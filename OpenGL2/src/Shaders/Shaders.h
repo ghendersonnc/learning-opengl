@@ -18,7 +18,7 @@ private:
 
 public:
 	unsigned int ID;
-	Shader(std::string vertexShaderPath, std::string fragmentShaderPath);
+	Shader(const std::string vertexShaderPath, const std::string fragmentShaderPath);
 	void use();
 	void destroy();
 

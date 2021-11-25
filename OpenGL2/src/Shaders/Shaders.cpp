@@ -1,74 +1,54 @@
 #include "Shaders.h"
 
-Shader::Shader(std::string vertexShaderPath, std::string fragmentShaderPath) {
-    {
-        std::ifstream vertCode(vertexShaderPath);
+Shader::Shader(const std::string vertexShaderPath, const std::string fragmentShaderPath) {
+
+    auto readShader = [](const std::string shaderPath) {
+        std::ifstream shaderCode(shaderPath);
         auto ss = std::ostringstream{};
 
-        if (!vertCode.is_open()) {
-            cerr << "Cannot open shader file" << endl;;
-            exit(-1);
+        if (!shaderCode.is_open()) {
+            cerr << "Cannot open (" << shaderPath << "): file does not exist" << endl;;
         }
-        ss << vertCode.rdbuf();
-        vertCode.close();
-        this->vertexShaderSource = ss.str();
-    }
+        ss << shaderCode.rdbuf();
+        shaderCode.close();
+        return ss.str();
+    };
+    this->vertexShaderSource = readShader(vertexShaderPath);
+    this->fragmentShaderSource = readShader(fragmentShaderPath);
 
-    {
-        std::ifstream fragCode(fragmentShaderPath);
-        auto ss = std::ostringstream{};
+    unsigned int vertexShader;
+    unsigned int fragmentShader;
 
-        if (!fragCode.is_open()) {
-            cerr << "Cannot open shader file" << endl;;
-            exit(-1);
-        }
-        ss << fragCode.rdbuf();
-        fragCode.close();
-        this->fragmentShaderSource = ss.str();
-    }
-    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    auto compileShader = [](GLenum type, const std::string shaderSource) {
+        const char* source = shaderSource.c_str();
+        unsigned int id = glCreateShader(type);
+        glShaderSource(id, 1, &source, nullptr);
+        glCompileShader(id);
 
-    {
-        const char* vSrc = this->vertexShaderSource.c_str();
-        glShaderSource(vertexShader, 1, &vSrc, nullptr);
-        glCompileShader(vertexShader);
         int result;
-        glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &result);
+        glGetShaderiv(id, GL_COMPILE_STATUS, &result);
 
-        if (!result) {
+        if (result == GL_FALSE) {
             int queryLen;
-            glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &queryLen);
+            glGetShaderiv(id, GL_INFO_LOG_LENGTH, &queryLen);
             char* errorLog = new char[queryLen];
 
-            glGetShaderInfoLog(vertexShader, queryLen, &queryLen, errorLog);
-            cerr << "Failed to compile vertex shader" << endl;
-            glDeleteShader(vertexShader);
-
+            glGetShaderInfoLog(id, queryLen, &queryLen, errorLog);
+            cerr << "Failed to compile "
+                << (type == GL_VERTEX_SHADER ? "vertex" : "fragment")
+                << " shader\n" 
+                << errorLog 
+                << endl;
+            glDeleteShader(id);
             delete[] errorLog;
+            return (unsigned int) 0;
         }
-    }
 
+        return id;
+    };
 
-    {
-        const char* fSrc = this->fragmentShaderSource.c_str();
-        glShaderSource(fragmentShader, 1, &fSrc, nullptr);
-        glCompileShader(fragmentShader);
-        int result;
-        glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &result);
-
-        if (!result) {
-            int queryLen;
-            glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &queryLen);
-            char* errorLog = new char[queryLen];
-
-            glGetShaderInfoLog(fragmentShader, queryLen, &queryLen, errorLog);
-            cerr << "Failed to compile fragment shader" << endl;
-            glDeleteShader(fragmentShader);
-
-            delete[] errorLog;
-        }
-    }
+    vertexShader = compileShader(GL_VERTEX_SHADER, this->vertexShaderSource);
+    fragmentShader = compileShader(GL_FRAGMENT_SHADER, this->fragmentShaderSource);
 
     this->ID = glCreateProgram();
     glAttachShader(this->ID, vertexShader);
