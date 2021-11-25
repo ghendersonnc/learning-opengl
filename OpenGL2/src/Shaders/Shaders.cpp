@@ -1,62 +1,97 @@
 #include "Shaders.h"
 
-std::string readShaderFile(std::string pathToShader) {
-    std::ifstream shaderCode(pathToShader);
-    auto ss = std::ostringstream{};
+Shader::Shader(std::string vertexShaderPath, std::string fragmentShaderPath) {
+    {
+        std::ifstream vertCode(vertexShaderPath);
+        auto ss = std::ostringstream{};
 
-    if (!shaderCode.is_open()) {
-        cerr << "Cannot open shader file" << endl;;
-        exit(-1);
+        if (!vertCode.is_open()) {
+            cerr << "Cannot open shader file" << endl;;
+            exit(-1);
+        }
+        ss << vertCode.rdbuf();
+        vertCode.close();
+        this->vertexShaderSource = ss.str();
     }
 
-    ss << shaderCode.rdbuf();
-    shaderCode.close();
-    return ss.str();
-}
+    {
+        std::ifstream fragCode(fragmentShaderPath);
+        auto ss = std::ostringstream{};
 
-unsigned int compileShader(unsigned int type, const std::string& source) {
-    unsigned int id = glCreateShader(type);
-    const char* src = source.c_str();
+        if (!fragCode.is_open()) {
+            cerr << "Cannot open shader file" << endl;;
+            exit(-1);
+        }
+        ss << fragCode.rdbuf();
+        fragCode.close();
+        this->fragmentShaderSource = ss.str();
+    }
+    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-    glShaderSource(id, 1, &src, nullptr);
-    glCompileShader(id);
+    {
+        const char* vSrc = this->vertexShaderSource.c_str();
+        glShaderSource(vertexShader, 1, &vSrc, nullptr);
+        glCompileShader(vertexShader);
+        int result;
+        glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &result);
 
-    int result;
-    glGetShaderiv(id, GL_COMPILE_STATUS, &result);
+        if (!result) {
+            int queryLen;
+            glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &queryLen);
+            char* errorLog = new char[queryLen];
 
-    // "Handle" shaders not compiling
-    if (!result) {
-        int queryLen;
-        glGetShaderiv(id, GL_INFO_LOG_LENGTH, &queryLen);
-        char* errorLog = new char[queryLen];
+            glGetShaderInfoLog(vertexShader, queryLen, &queryLen, errorLog);
+            cerr << "Failed to compile vertex shader" << endl;
+            glDeleteShader(vertexShader);
 
-        glGetShaderInfoLog(id, queryLen, &queryLen, errorLog);
-        cerr << "Failed to compile "
-            << (type == GL_VERTEX_SHADER ? "vertex" : "fragment")
-            << " shader" << endl;;
-        cerr << errorLog << endl;;
-        glDeleteShader(id);
-
-        delete[] errorLog;
-
-        return 0;
+            delete[] errorLog;
+        }
     }
 
-    return id;
+
+    {
+        const char* fSrc = this->fragmentShaderSource.c_str();
+        glShaderSource(fragmentShader, 1, &fSrc, nullptr);
+        glCompileShader(fragmentShader);
+        int result;
+        glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &result);
+
+        if (!result) {
+            int queryLen;
+            glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &queryLen);
+            char* errorLog = new char[queryLen];
+
+            glGetShaderInfoLog(fragmentShader, queryLen, &queryLen, errorLog);
+            cerr << "Failed to compile fragment shader" << endl;
+            glDeleteShader(fragmentShader);
+
+            delete[] errorLog;
+        }
+    }
+
+    this->ID = glCreateProgram();
+    glAttachShader(this->ID, vertexShader);
+    glAttachShader(this->ID, fragmentShader);
+    glLinkProgram(this->ID);
+    glValidateProgram(this->ID);
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+     
+    int valid;
+
+    glGetProgramiv(this->ID, GL_VALIDATE_STATUS, &valid);
+
+    if (valid == GL_FALSE) {
+        cerr << "Shader programmed failed validation. Shader program will NOT execute." << endl;
+    }
+
 }
 
-int createShaderProgram(const std::string& vertShader, const std::string& fragShader) {
-    unsigned int shaderProgram = glCreateProgram();
-    unsigned int vs = compileShader(GL_VERTEX_SHADER, vertShader);
-    unsigned int fs = compileShader(GL_FRAGMENT_SHADER, fragShader);
+void Shader::use() {
+    glUseProgram(this->ID);
+}
 
-    glAttachShader(shaderProgram, vs);
-    glAttachShader(shaderProgram, fs);
-    glLinkProgram(shaderProgram);
-    glValidateProgram(shaderProgram);
-
-    glDeleteShader(vs);
-    glDeleteShader(fs);
-
-    return shaderProgram;
+void Shader::destroy() {
+    glDeleteProgram(this->ID);
 }

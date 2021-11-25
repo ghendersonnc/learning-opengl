@@ -11,11 +11,15 @@ using std::cout;
 using std::cerr;
 using std::endl;
 
-// Reads a given shader file
-std::string readShaderFile(std::string pathToShader);
+class Shader {
+private:
+	std::string vertexShaderSource;
+	std::string fragmentShaderSource;
 
-// Tells GPU to compile shader
-unsigned int compileShader(unsigned int type, const std::string& source);
+public:
+	unsigned int ID;
+	Shader(std::string vertexShaderPath, std::string fragmentShaderPath);
+	void use();
+	void destroy();
 
-// Create a shader program
-int createShaderProgram(const std::string& vertShader, const std::string& fragShader);
+};
