@@ -5,9 +5,7 @@ layout(location = 1) in vec4 aColor;
 
 out vec4 otherColor;
 
-uniform mat4 transform;
-
 void main() {
-	gl_Position = transform * position;
+	gl_Position = position;
 	otherColor = aColor;
 }

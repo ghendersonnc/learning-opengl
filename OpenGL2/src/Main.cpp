@@ -46,60 +46,73 @@ int main(void) {
 
     float positions[] = {
         // X Y Z coordinates    R G B A
-         0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f, 1.0f,  // bottom right
-         0.0f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f, 1.0f, // top
-        -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f, 1.0f,  // bottom left
+         0.5f, -0.5f, 0.0f,    // bottom right
+         0.0f,  0.5f, 0.0f,   // top
+        -0.5f, -0.5f, 0.0f   // bottom left
     };
 
     
-    unsigned int VBO, VAO;
+    unsigned int triangleVBO, VAO;
     glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &triangleVBO);
 
     glBindVertexArray(VAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, 21 * sizeof(float), positions, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
+    glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), positions, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0); // Let the GPU know to use the attribute array
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (const void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (const void*)0);
+
+    
+    float colors[] = {
+        // RGBA
+        0.0f, 0.0f, 0.0f, 1.0f,
+        0.0f, 1.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f, 1.0f
+    };
+
+    unsigned int colorVBO;
+    glGenBuffers(1, &colorVBO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
+    glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), colors, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(1); // Let the GPU know to use the attribute array
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (const void*)(3 * sizeof(float)));
-    
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (const void*)0);
+
+
+
     Shader shaderProgram("resources/shaders/vertexShader.vert", "resources/shaders/fragmentShader.frag");
     shaderProgram.use();
 
     glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind
-
-    int something = 0;
+    
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     
     glfwSetKeyCallback(window, keyCallback);
     // Continuously run until window is closed
 
-    float tokyoDeg = 1.0f;
     while (!glfwWindowShouldClose(window)) {
         // color
         glClearColor(0.22f, 0.35f, 0.45f, 0.5f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // drifting triangle :D
-        glm::mat4 transform = glm::mat4(1.0f);
-        transform = glm::scale(transform, glm::vec3(0.5f, 0.5f, 0.5f));
 
-        transform = glm::rotate(transform, glm::radians(tokyoDeg), glm::vec3(0.0f, 0.0f, 1.0f));
-        tokyoDeg = tokyoDeg + 0.1f;
-
-        transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-
-        unsigned int transLocation = glGetUniformLocation(shaderProgram.ID, "transform");
-        glUniformMatrix4fv(transLocation, 1, GL_FALSE, glm::value_ptr(transform));
-
+        if (colors[0] < 1.0f) {
+            glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
+            colors[0] = colors[0] + 0.01f;
+            colors[4] = colors[4] + 0.01f;
+            colors[8] = colors[8] + 0.01f;
+            colors[5] = colors[5] - 0.01f;
+            colors[10] = colors[10] - 0.01f;
+            glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), colors, GL_STATIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+        }
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         glfwSwapBuffers(window);
-        
+        glfwSwapInterval(2);
         glfwPollEvents();
     }
     
