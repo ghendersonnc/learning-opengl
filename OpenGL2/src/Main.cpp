@@ -25,16 +25,15 @@ int main(void) {
     if (!glfwInit())
         return -1;
 
-
     window = glfwCreateWindow(800, 800, "OpenGL", NULL, NULL);
     if (!window) {
         glfwTerminate();
         return -1;
     }
     glfwMakeContextCurrent(window);
+    glfwSetKeyCallback(window, keyCallback);
 
     // BEGIN OPENGL CODE
-
     glewInit();
 
     if (glewInit() != GLEW_OK) {
@@ -51,7 +50,6 @@ int main(void) {
         -0.5f, -0.5f, 0.0f   // bottom left
     };
 
-    
     unsigned int triangleVBO, VAO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &triangleVBO);
@@ -63,7 +61,7 @@ int main(void) {
 
     glEnableVertexAttribArray(0); // Let the GPU know to use the attribute array
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (const void*)0);
-
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     
     float colors[] = {
         // RGBA
@@ -80,27 +78,24 @@ int main(void) {
 
     glEnableVertexAttribArray(1); // Let the GPU know to use the attribute array
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (const void*)0);
-
-
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     Shader shaderProgram("resources/shaders/vertexShader.vert", "resources/shaders/fragmentShader.frag");
     shaderProgram.use();
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind
     
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    
-    glfwSetKeyCallback(window, keyCallback);
-    // Continuously run until window is closed
 
+    // Continuously run until window is closed
     while (!glfwWindowShouldClose(window)) {
         // color
         glClearColor(0.22f, 0.35f, 0.45f, 0.5f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-
+        // Devour the whole triangle with red!!
         if (colors[0] < 1.0f) {
             glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
+
+            // better way to do this?
             colors[0] = colors[0] + 0.01f;
             colors[4] = colors[4] + 0.01f;
             colors[8] = colors[8] + 0.01f;
@@ -109,6 +104,7 @@ int main(void) {
             glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), colors, GL_STATIC_DRAW);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
         }
+
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         glfwSwapBuffers(window);

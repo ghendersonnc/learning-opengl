@@ -1,7 +1,6 @@
 #include "Shaders.h"
 
 Shader::Shader(const std::string vertexShaderPath, const std::string fragmentShaderPath) {
-
     auto readShader = [](const std::string shaderPath) {
         std::ifstream shaderCode(shaderPath);
         auto ss = std::ostringstream{};
@@ -31,7 +30,7 @@ Shader::Shader(const std::string vertexShaderPath, const std::string fragmentSha
         if (result == GL_FALSE) {
             int queryLen;
             glGetShaderiv(id, GL_INFO_LOG_LENGTH, &queryLen);
-            char* errorLog = new char[queryLen];
+            char* errorLog = (char*)malloc(queryLen * sizeof(char));
 
             glGetShaderInfoLog(id, queryLen, &queryLen, errorLog);
             cerr << "Failed to compile "
@@ -39,8 +38,10 @@ Shader::Shader(const std::string vertexShaderPath, const std::string fragmentSha
                 << " shader\n" 
                 << errorLog 
                 << endl;
+
+            free(errorLog);
+
             glDeleteShader(id);
-            delete[] errorLog;
             return (unsigned int) 0;
         }
 
@@ -55,6 +56,8 @@ Shader::Shader(const std::string vertexShaderPath, const std::string fragmentSha
     glAttachShader(this->ID, fragmentShader);
     glLinkProgram(this->ID);
     glValidateProgram(this->ID);
+
+    // Cleanup
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
      
@@ -62,6 +65,7 @@ Shader::Shader(const std::string vertexShaderPath, const std::string fragmentSha
 
     glGetProgramiv(this->ID, GL_VALIDATE_STATUS, &valid);
 
+    // Kindly let the dev know shaders didn't work
     if (valid == GL_FALSE) {
         cerr << "Shader programmed failed validation. Shader program will NOT execute." << endl;
     }
