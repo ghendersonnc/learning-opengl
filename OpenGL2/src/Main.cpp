@@ -2,7 +2,6 @@
 #include <iostream>
 #include <Windows.h>
 
-
 // Dependencies
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
@@ -12,6 +11,11 @@
 
 // Self made headers 
 #include "Shaders/Shaders.h"
+#include "VBO/VBO.h"
+
+// Some defs
+#define WINDOW_HEIGHT 800
+#define WINDOW_WIDTH 800
 
 using std::cout;
 using std::cerr;
@@ -25,7 +29,7 @@ int main(void) {
     if (!glfwInit())
         return -1;
 
-    window = glfwCreateWindow(800, 800, "OpenGL", NULL, NULL);
+    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "OpenGL", NULL, NULL);
     if (!window) {
         glfwTerminate();
         return -1;
@@ -50,19 +54,19 @@ int main(void) {
         -0.5f, -0.5f, 0.0f   // bottom left
     };
 
-    unsigned int triangleVBO, VAO;
+    unsigned int VAO;
     glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &triangleVBO);
 
+    VBO triangleVBO(GL_ARRAY_BUFFER, positions, 9 * sizeof(float), GL_STATIC_DRAW);
+    
+    // Link triangleVBO
     glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
-    glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), positions, GL_STATIC_DRAW);
-
     glEnableVertexAttribArray(0); // Let the GPU know to use the attribute array
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (const void*)0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    
+
+    triangleVBO.unbind();
+    glBindVertexArray(0);
+
     float colors[] = {
         // RGBA
         0.0f, 0.0f, 0.0f, 1.0f,
@@ -70,15 +74,15 @@ int main(void) {
         0.0f, 0.0f, 1.0f, 1.0f
     };
 
-    unsigned int colorVBO;
-    glGenBuffers(1, &colorVBO);
+    VBO colorVBO(GL_ARRAY_BUFFER, colors, 12 * sizeof(float), GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
-    glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), colors, GL_STATIC_DRAW);
-
+    // Link colorVBO
+    glBindVertexArray(VAO);
     glEnableVertexAttribArray(1); // Let the GPU know to use the attribute array
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (const void*)0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    colorVBO.unbind();
+    glBindVertexArray(0);
 
     Shader shaderProgram("resources/shaders/vertexShader.vert", "resources/shaders/fragmentShader.frag");
     shaderProgram.use();
@@ -90,10 +94,10 @@ int main(void) {
         // color
         glClearColor(0.22f, 0.35f, 0.45f, 0.5f);
         glClear(GL_COLOR_BUFFER_BIT);
-
+        glBindVertexArray(VAO);
         // Devour the whole triangle with red!!
         if (colors[0] < 1.0f) {
-            glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
+            colorVBO.bind();
 
             // better way to do this?
             colors[0] = colors[0] + 0.01f;
@@ -101,10 +105,10 @@ int main(void) {
             colors[8] = colors[8] + 0.01f;
             colors[5] = colors[5] - 0.01f;
             colors[10] = colors[10] - 0.01f;
-            glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), colors, GL_STATIC_DRAW);
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            colorVBO.update(12 * sizeof(float), colors);
+            colorVBO.unbind();
         }
-
+        
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         glfwSwapBuffers(window);
@@ -112,6 +116,9 @@ int main(void) {
         glfwPollEvents();
     }
     
+    glDeleteVertexArrays(1, &VAO);
+    triangleVBO.destroy();
+    colorVBO.destroy();
     shaderProgram.destroy();
 
     glfwTerminate();

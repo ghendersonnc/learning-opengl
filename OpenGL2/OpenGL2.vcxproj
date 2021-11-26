@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Shaders\Shaders.cpp" />
+    <ClCompile Include="src\VBO\VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\fragmentShader.frag" />
@@ -156,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Shaders\Shaders.h" />
+    <ClInclude Include="src\VBO\VBO.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
