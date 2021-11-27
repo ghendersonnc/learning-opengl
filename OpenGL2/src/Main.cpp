@@ -87,16 +87,16 @@ int main(void) {
     float colors[] = {
         // RGBA
         1.0f, 0.0f, 0.0f, 1.0f,
-        0.0f, 1.0f, 0.0f, 1.0f,
         0.0f, 0.0f, 1.0f, 1.0f,
+        0.0f, 1.0f, 0.0f, 1.0f,
 
         1.0f, 0.0f, 0.0f, 1.0f,
         0.0f, 1.0f, 0.0f, 1.0f,
         0.0f, 0.0f, 1.0f, 1.0f,
 
         1.0f, 0.0f, 0.0f, 1.0f,
-        0.0f, 1.0f, 0.0f, 1.0f,
         0.0f, 0.0f, 1.0f, 1.0f,
+        0.0f, 1.0f, 0.0f, 1.0f,
 
         1.0f, 0.0f, 0.0f, 1.0f,
         0.0f, 1.0f, 0.0f, 1.0f,
@@ -140,7 +140,6 @@ int main(void) {
         shaderProgram.setMat4Uniform("view", view);
         shaderProgram.setMat4Uniform("projection", projection);
         rotDeg = rotDeg + 1.0f;
-
         colorVBO.bind();
         colors[0] = sin(glfwGetTime());
         colors[5] = sin(glfwGetTime() + 1);
@@ -157,6 +156,7 @@ int main(void) {
         colors[36] = sin(glfwGetTime() + 9);
         colors[41] = sin(glfwGetTime() + 10);
         colors[46] = sin(glfwGetTime() + 11);
+     
         colorVBO.update(48 * sizeof(float), colors);
         colorVBO.unbind();
 
@@ -164,8 +164,7 @@ int main(void) {
         glDrawArrays(GL_TRIANGLES, 0, 12);
 
         glfwSwapBuffers(window);
-        //glfwSwapInterval(1);
-        Sleep(1);
+        glfwSwapInterval(1);
         glfwPollEvents();
     }
     
