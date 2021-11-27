@@ -17,7 +17,7 @@
 // Some defs
 #define WINDOW_HEIGHT 800
 #define WINDOW_WIDTH 800
-#define TARGET_FPS 144
+#define TARGET_FPS 60
 
 using std::cout;
 using std::cerr;
@@ -53,24 +53,24 @@ int main(void) {
         // X Y Z coordinates
         // FRONT face
         0.0f, 0.5f, 0.0f,
-        -0.5f, -0.5f, 0.5f,
-        0.5f, -0.5f, 0.5f,
+        -0.5f, -0.0f, 0.5f,
+        0.5f, -0.0f, 0.5f,
 
         // BACK face
         0.0f, 0.5f, 0.0f,
-        -0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f, -0.5f,
+        -0.5f, -0.0f, -0.5f,
+        0.5f, -0.0f, -0.5f,
 
 
         // RIGHT face
         0.0f, 0.5f, 0.0f,
-        0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f, 0.5f,
+        0.5f, -0.0f, -0.5f,
+        0.5f, -0.0f, 0.5f,
 
         // LEFT face
         0.0f, 0.5f, 0.0f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f, 0.5f,
+        -0.5f, -0.0f, -0.5f,
+        -0.5f, -0.0f, 0.5f,
     };
 
     VBO triangleVBO(GL_ARRAY_BUFFER, positions, 36 * sizeof(float), GL_STATIC_DRAW);
@@ -128,23 +128,23 @@ int main(void) {
             glm::mat4 projection = glm::mat4(1.0f);
         
             model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
-            model = glm::rotate(model, glm::radians(rotDeg), glm::vec3(0.5f, 1.0f, 1.0f));
+            model = glm::rotate(model, glm::radians(rotDeg), glm::vec3(0.0f, 1.0f, 0.0f));
             
             if (i == 0) {
                 triangleVBO.bind();
-                positions[1] = 0.5f;
-                positions[10] = 0.5f;
-                positions[19] = 0.5f;
-                positions[28] = 0.5f;
+                positions[1] = 2.0f;
+                positions[10] = 2.0f;
+                positions[19] = 2.0f;
+                positions[28] = 2.0f;
                 triangleVBO.update(36 * sizeof(float), positions);
                 triangleVBO.unbind();
             }
             else {
                 triangleVBO.bind();
-                positions[1] = -1.0f;
-                positions[10] = -1.0f;
-                positions[19] = -1.0f;
-                positions[28] = -1.0f;
+                positions[1] = -2.0f;
+                positions[10] = -2.0f;
+                positions[19] = -2.0f;
+                positions[28] = -2.0f;
                 triangleVBO.update(36 * sizeof(float), positions);
                 triangleVBO.unbind();
             }
