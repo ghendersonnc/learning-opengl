@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Shaders\Shaders.cpp" />
+    <ClCompile Include="src\VAO\VAO.cpp" />
     <ClCompile Include="src\VBO\VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Shaders\Shaders.h" />
+    <ClInclude Include="src\VAO\VAO.h" />
     <ClInclude Include="src\VBO\VBO.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

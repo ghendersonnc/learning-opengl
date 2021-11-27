@@ -12,10 +12,12 @@
 // Self made headers 
 #include "Shaders/Shaders.h"
 #include "VBO/VBO.h"
+#include "VAO/VAO.h"
 
 // Some defs
 #define WINDOW_HEIGHT 800
 #define WINDOW_WIDTH 800
+#define TARGET_FPS 144
 
 using std::cout;
 using std::cerr;
@@ -71,19 +73,12 @@ int main(void) {
         -0.5f, -0.5f, 0.5f,
     };
 
-    unsigned int VAO;
-    glGenVertexArrays(1, &VAO);
-
     VBO triangleVBO(GL_ARRAY_BUFFER, positions, 36 * sizeof(float), GL_STATIC_DRAW);
+    VAO VAO;
     
-    // Link triangleVBO
-    glBindVertexArray(VAO);
-    glEnableVertexAttribArray(0); // Let the GPU know to use the attribute array
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (const void*)0);
-
+    VAO.linkVBO(triangleVBO, 0, 3);
     triangleVBO.unbind();
-    glBindVertexArray(0);
-
+    VAO.unbind();
     float colors[] = {
         // RGBA
         1.0f, 0.0f, 0.0f, 1.0f,
@@ -103,16 +98,13 @@ int main(void) {
         0.0f, 0.0f, 1.0f, 1.0f
     };
 
-
     VBO colorVBO(GL_ARRAY_BUFFER, colors, 48 * sizeof(float), GL_STATIC_DRAW);
 
     // Link colorVBO
-    glBindVertexArray(VAO);
-    glEnableVertexAttribArray(1); // Let the GPU know to use the attribute array
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (const void*)0);
-
+    VAO.bind();
+    VAO.linkVBO(colorVBO, 1, 4);
     colorVBO.unbind();
-    glBindVertexArray(0);
+    VAO.unbind();
 
     Shader shaderProgram("resources/shaders/vertexShader.vert", "resources/shaders/fragmentShader.frag");
     shaderProgram.use();
@@ -123,52 +115,60 @@ int main(void) {
     
     // Continuously run until window is closed
     float rotDeg = 0.0f;
+    double lastTime = glfwGetTime();
     while (!glfwWindowShouldClose(window)) {
         // color
         glClearColor(0.22f, 0.35f, 0.45f, 0.5f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glBindVertexArray(VAO);
-    
-        glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 view = glm::mat4(1.0f);
-        glm::mat4 projection = glm::mat4(1.0f);
+        VAO.bind();
         
-        model = glm::rotate(model, glm::radians(rotDeg), glm::vec3(0.0f, 1.0f, 0.0f));
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-        projection = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.f);
-        shaderProgram.setMat4Uniform("model", model);
-        shaderProgram.setMat4Uniform("view", view);
-        shaderProgram.setMat4Uniform("projection", projection);
-        rotDeg = rotDeg + 1.0f;
-        colorVBO.bind();
-        colors[0] = sin(glfwGetTime());
-        colors[5] = sin(glfwGetTime() + 1);
-        colors[10] = sin(glfwGetTime() + 2);
+        for (int i = 0; i < 2; i++) {
+            glm::mat4 model = glm::mat4(1.0f);
+            glm::mat4 view = glm::mat4(1.0f);
+            glm::mat4 projection = glm::mat4(1.0f);
+        
+            model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+            model = glm::rotate(model, glm::radians(rotDeg), glm::vec3(0.5f, 1.0f, 1.0f));
+            
+            if (i == 0) {
+                triangleVBO.bind();
+                positions[1] = 0.5f;
+                positions[10] = 0.5f;
+                positions[19] = 0.5f;
+                positions[28] = 0.5f;
+                triangleVBO.update(36 * sizeof(float), positions);
+                triangleVBO.unbind();
+            }
+            else {
+                triangleVBO.bind();
+                positions[1] = -1.0f;
+                positions[10] = -1.0f;
+                positions[19] = -1.0f;
+                positions[28] = -1.0f;
+                triangleVBO.update(36 * sizeof(float), positions);
+                triangleVBO.unbind();
+            }
 
-        colors[12] = sin(glfwGetTime() + 3);
-        colors[17] = sin(glfwGetTime() + 4);
-        colors[22] = sin(glfwGetTime() + 5);
-
-        colors[24] = sin(glfwGetTime() + 6);
-        colors[29] = sin(glfwGetTime() + 7);
-        colors[34] = sin(glfwGetTime() + 8);
-
-        colors[36] = sin(glfwGetTime() + 9);
-        colors[41] = sin(glfwGetTime() + 10);
-        colors[46] = sin(glfwGetTime() + 11);
-     
-        colorVBO.update(48 * sizeof(float), colors);
-        colorVBO.unbind();
-
-
-        glDrawArrays(GL_TRIANGLES, 0, 12);
+            view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+            projection = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.f);
+            shaderProgram.setMat4Uniform("model", model);
+            shaderProgram.setMat4Uniform("view", view);
+            shaderProgram.setMat4Uniform("projection", projection);
+            rotDeg = rotDeg + 1.0f;
+            glDrawArrays(GL_TRIANGLES, 0, 12);
+        }
 
         glfwSwapBuffers(window);
-        glfwSwapInterval(1);
+       
         glfwPollEvents();
+
+        // Rate limit to 60 FPS
+        while (glfwGetTime() < lastTime + 1.0 / TARGET_FPS) {}
+        lastTime += 1.0/ TARGET_FPS;
+
     }
     
-    glDeleteVertexArrays(1, &VAO);
+    VAO.destroy();
     triangleVBO.destroy();
     colorVBO.destroy();
     shaderProgram.destroy();
