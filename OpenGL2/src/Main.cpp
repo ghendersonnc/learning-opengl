@@ -48,16 +48,33 @@ int main(void) {
     cout << glGetString(GL_VERSION) << endl;;
 
     float positions[] = {
-        // X Y Z coordinates    R G B A
-         0.5f, -0.5f, 0.0f,    // bottom right
-         0.0f,  0.5f, 0.0f,   // top
-        -0.5f, -0.5f, 0.0f   // bottom left
+        // X Y Z coordinates
+        // FRONT face
+        0.0f, 0.5f, 0.0f,
+        -0.5f, -0.5f, 0.5f,
+        0.5f, -0.5f, 0.5f,
+
+        // BACK face
+        0.0f, 0.5f, 0.0f,
+        -0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+
+
+        // RIGHT face
+        0.0f, 0.5f, 0.0f,
+        0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, 0.5f,
+
+        // LEFT face
+        0.0f, 0.5f, 0.0f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, 0.5f,
     };
 
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
 
-    VBO triangleVBO(GL_ARRAY_BUFFER, positions, 9 * sizeof(float), GL_STATIC_DRAW);
+    VBO triangleVBO(GL_ARRAY_BUFFER, positions, 36 * sizeof(float), GL_STATIC_DRAW);
     
     // Link triangleVBO
     glBindVertexArray(VAO);
@@ -69,12 +86,25 @@ int main(void) {
 
     float colors[] = {
         // RGBA
-        0.0f, 0.0f, 0.0f, 1.0f,
+        1.0f, 0.0f, 0.0f, 1.0f,
+        0.0f, 1.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f, 1.0f,
+
+        1.0f, 0.0f, 0.0f, 1.0f,
+        0.0f, 1.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f, 1.0f,
+
+        1.0f, 0.0f, 0.0f, 1.0f,
+        0.0f, 1.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f, 1.0f,
+
+        1.0f, 0.0f, 0.0f, 1.0f,
         0.0f, 1.0f, 0.0f, 1.0f,
         0.0f, 0.0f, 1.0f, 1.0f
     };
 
-    VBO colorVBO(GL_ARRAY_BUFFER, colors, 12 * sizeof(float), GL_STATIC_DRAW);
+
+    VBO colorVBO(GL_ARRAY_BUFFER, colors, 48 * sizeof(float), GL_STATIC_DRAW);
 
     // Link colorVBO
     glBindVertexArray(VAO);
@@ -89,30 +119,53 @@ int main(void) {
     
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+    glEnable(GL_DEPTH_TEST);
+    
     // Continuously run until window is closed
+    float rotDeg = 0.0f;
     while (!glfwWindowShouldClose(window)) {
         // color
         glClearColor(0.22f, 0.35f, 0.45f, 0.5f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glBindVertexArray(VAO);
-        // Devour the whole triangle with red!!
-        if (colors[0] < 1.0f) {
-            colorVBO.bind();
-
-            // better way to do this?
-            colors[0] = colors[0] + 0.01f;
-            colors[4] = colors[4] + 0.01f;
-            colors[8] = colors[8] + 0.01f;
-            colors[5] = colors[5] - 0.01f;
-            colors[10] = colors[10] - 0.01f;
-            colorVBO.update(12 * sizeof(float), colors);
-            colorVBO.unbind();
-        }
+    
+        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 view = glm::mat4(1.0f);
+        glm::mat4 projection = glm::mat4(1.0f);
         
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        model = glm::rotate(model, glm::radians(rotDeg), glm::vec3(0.0f, 1.0f, 0.0f));
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        projection = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.f);
+        shaderProgram.setMat4Uniform("model", model);
+        shaderProgram.setMat4Uniform("view", view);
+        shaderProgram.setMat4Uniform("projection", projection);
+        rotDeg = rotDeg + 1.0f;
+
+        colorVBO.bind();
+        colors[0] = sin(glfwGetTime());
+        colors[5] = sin(glfwGetTime() + 1);
+        colors[10] = sin(glfwGetTime() + 2);
+
+        colors[12] = sin(glfwGetTime() + 3);
+        colors[17] = sin(glfwGetTime() + 4);
+        colors[22] = sin(glfwGetTime() + 5);
+
+        colors[24] = sin(glfwGetTime() + 6);
+        colors[29] = sin(glfwGetTime() + 7);
+        colors[34] = sin(glfwGetTime() + 8);
+
+        colors[36] = sin(glfwGetTime() + 9);
+        colors[41] = sin(glfwGetTime() + 10);
+        colors[46] = sin(glfwGetTime() + 11);
+        colorVBO.update(48 * sizeof(float), colors);
+        colorVBO.unbind();
+
+
+        glDrawArrays(GL_TRIANGLES, 0, 12);
 
         glfwSwapBuffers(window);
-        glfwSwapInterval(2);
+        //glfwSwapInterval(1);
+        Sleep(1);
         glfwPollEvents();
     }
     
