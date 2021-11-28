@@ -116,40 +116,29 @@ int main(void) {
     // Continuously run until window is closed
     float rotDeg = 0.0f;
     double lastTime = glfwGetTime();
+    
+    glm::vec3 pyramids[] = {
+        glm::vec3(0.0f, 0.0f, -3.0f),
+        glm::vec3(1.0f, -1.0f, -5.0f),
+        glm::vec3(0.1f, -.25f, -7.0f),
+        glm::vec3(-.25f, -0.5f, -2.0f),
+    };
     while (!glfwWindowShouldClose(window)) {
         // color
-        glClearColor(0.22f, 0.35f, 0.45f, 0.5f);
+        //glClearColor(0.22f, 0.35f, 0.45f, 0.5f);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         VAO.bind();
         
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 4; i++) {
             glm::mat4 model = glm::mat4(1.0f);
             glm::mat4 view = glm::mat4(1.0f);
             glm::mat4 projection = glm::mat4(1.0f);
         
             model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
             model = glm::rotate(model, glm::radians(rotDeg), glm::vec3(0.0f, 1.0f, 0.0f));
-            
-            if (i == 0) {
-                triangleVBO.bind();
-                positions[1] = 2.0f;
-                positions[10] = 2.0f;
-                positions[19] = 2.0f;
-                positions[28] = 2.0f;
-                triangleVBO.update(36 * sizeof(float), positions);
-                triangleVBO.unbind();
-            }
-            else {
-                triangleVBO.bind();
-                positions[1] = -2.0f;
-                positions[10] = -2.0f;
-                positions[19] = -2.0f;
-                positions[28] = -2.0f;
-                triangleVBO.update(36 * sizeof(float), positions);
-                triangleVBO.unbind();
-            }
 
-            view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+            view = glm::translate(view, pyramids[i]);
             projection = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.f);
             shaderProgram.setMat4Uniform("model", model);
             shaderProgram.setMat4Uniform("view", view);
