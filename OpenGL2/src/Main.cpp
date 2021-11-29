@@ -15,8 +15,8 @@
 #include "VAO/VAO.h"
 
 // Some defs
-#define WINDOW_HEIGHT 800
 #define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
 #define TARGET_FPS 60
 
 using std::cout;
@@ -50,41 +50,61 @@ int main(void) {
     cout << glGetString(GL_VERSION) << endl;;
 
     float positions[] = {
-        // X Y Z coordinates
-        // FRONT face
-        0.0f, 0.5f, 0.0f,
-        -0.5f, -0.0f, 0.5f,
-        0.5f, -0.0f, 0.5f,
-
-        // BACK face
-        0.0f, 0.5f, 0.0f,
-        -0.5f, -0.0f, -0.5f,
-        0.5f, -0.0f, -0.5f,
-
-
-        // RIGHT face
-        0.0f, 0.5f, 0.0f,
-        0.5f, -0.0f, -0.5f,
-        0.5f, -0.0f, 0.5f,
-
-        // LEFT face
-        0.0f, 0.5f, 0.0f,
-        -0.5f, -0.0f, -0.5f,
-        -0.5f, -0.0f, 0.5f,
+        // Back face
+    -1.0f, -1.0f, -1.0f, 
+     1.0f,  1.0f, -1.0f, 
+     1.0f, -1.0f, -1.0f,         
+     1.0f,  1.0f, -1.0f, 
+    -1.0f, -1.0f, -1.0f, 
+    -1.0f,  1.0f, -1.0f, 
+    // Front face
+    -1.0f, -1.0f,  1.0f, 
+     1.0f, -1.0f,  1.0f, 
+     1.0f,  1.0f,  1.0f, 
+     1.0f,  1.0f,  1.0f, 
+    -1.0f,  1.0f,  1.0f, 
+    -1.0f, -1.0f,  1.0f, 
+    // Left face
+    -1.0f,  1.0f,  1.0f, 
+    -1.0f,  1.0f, -1.0f, 
+    -1.0f, -1.0f, -1.0f, 
+    -1.0f, -1.0f, -1.0f, 
+    -1.0f, -1.0f,  1.0f, 
+    -1.0f,  1.0f,  1.0f, 
+    // Right face
+     1.0f,  1.0f,  1.0f, 
+     1.0f, -1.0f, -1.0f, 
+     1.0f,  1.0f, -1.0f,      
+     1.0f, -1.0f, -1.0f, 
+     1.0f,  1.0f,  1.0f, 
+     1.0f, -1.0f,  1.0f,    
+    // Bottom face
+    -1.0f, -1.0f, -1.0f, 
+     1.0f, -1.0f, -1.0f, 
+     1.0f, -1.0f,  1.0f, 
+     1.0f, -1.0f,  1.0f, 
+    -1.0f, -1.0f,  1.0f, 
+    -1.0f, -1.0f, -1.0f, 
+    // Top face
+    -1.0f,  1.0f, -1.0f, 
+     1.0f,  1.0f,  1.0f, 
+     1.0f,  1.0f, -1.0f,  
+     1.0f,  1.0f,  1.0f, 
+    -1.0f,  1.0f, -1.0f, 
+    -1.0f,  1.0f,  1.0f
     };
 
-    VBO triangleVBO(GL_ARRAY_BUFFER, positions, 36 * sizeof(float), GL_STATIC_DRAW);
+    VBO cubeVBO(GL_ARRAY_BUFFER, positions, 108 * sizeof(float), GL_STATIC_DRAW);
     VAO VAO;
     
-    VAO.linkVBO(triangleVBO, 0, 3);
-    triangleVBO.unbind();
+    VAO.linkVBO(cubeVBO, 0, 3);
+    cubeVBO.unbind();
     VAO.unbind();
     float colors[] = {
         // RGBA
         1.0f, 0.0f, 0.0f, 1.0f,
         0.0f, 0.0f, 1.0f, 1.0f,
         0.0f, 1.0f, 0.0f, 1.0f,
-
         1.0f, 0.0f, 0.0f, 1.0f,
         0.0f, 1.0f, 0.0f, 1.0f,
         0.0f, 0.0f, 1.0f, 1.0f,
@@ -92,13 +112,40 @@ int main(void) {
         1.0f, 0.0f, 0.0f, 1.0f,
         0.0f, 0.0f, 1.0f, 1.0f,
         0.0f, 1.0f, 0.0f, 1.0f,
+        1.0f, 0.0f, 0.0f, 1.0f,
+        0.0f, 1.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f, 1.0f,
 
+        1.0f, 0.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f, 1.0f,
+        0.0f, 1.0f, 0.0f, 1.0f,
+        1.0f, 0.0f, 0.0f, 1.0f,
+        0.0f, 1.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f, 1.0f,
+
+        1.0f, 0.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f, 1.0f,
+        0.0f, 1.0f, 0.0f, 1.0f,
+        1.0f, 0.0f, 0.0f, 1.0f,
+        0.0f, 1.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f, 1.0f,
+
+        1.0f, 0.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f, 1.0f,
+        0.0f, 1.0f, 0.0f, 1.0f,
+        1.0f, 0.0f, 0.0f, 1.0f,
+        0.0f, 1.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f, 1.0f,
+
+        1.0f, 0.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f, 1.0f,
+        0.0f, 1.0f, 0.0f, 1.0f,
         1.0f, 0.0f, 0.0f, 1.0f,
         0.0f, 1.0f, 0.0f, 1.0f,
         0.0f, 0.0f, 1.0f, 1.0f
     };
 
-    VBO colorVBO(GL_ARRAY_BUFFER, colors, 48 * sizeof(float), GL_STATIC_DRAW);
+    VBO colorVBO(GL_ARRAY_BUFFER, colors, 156 * sizeof(float), GL_STATIC_DRAW);
 
     // Link colorVBO
     VAO.bind();
@@ -114,38 +161,30 @@ int main(void) {
     glEnable(GL_DEPTH_TEST);
     
     // Continuously run until window is closed
-    float rotDeg = 0.0f;
     double lastTime = glfwGetTime();
-    
-    glm::vec3 pyramids[] = {
-        glm::vec3(0.0f, 0.0f, -3.0f),
-        glm::vec3(1.0f, -1.0f, -5.0f),
-        glm::vec3(0.1f, -.25f, -7.0f),
-        glm::vec3(-.25f, -0.5f, -2.0f),
-    };
+
     while (!glfwWindowShouldClose(window)) {
         // color
-        //glClearColor(0.22f, 0.35f, 0.45f, 0.5f);
+        //glClearColor(0.20f, 0.91f, 0.91f, 1.0f);
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         VAO.bind();
         
-        for (int i = 0; i < 4; i++) {
-            glm::mat4 model = glm::mat4(1.0f);
-            glm::mat4 view = glm::mat4(1.0f);
-            glm::mat4 projection = glm::mat4(1.0f);
-        
-            model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
-            model = glm::rotate(model, glm::radians(rotDeg), glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 view = glm::mat4(1.0f);
+        glm::mat4 projection = glm::mat4(1.0f);
 
-            view = glm::translate(view, pyramids[i]);
-            projection = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.f);
-            shaderProgram.setMat4Uniform("model", model);
-            shaderProgram.setMat4Uniform("view", view);
-            shaderProgram.setMat4Uniform("projection", projection);
-            rotDeg = rotDeg + 1.0f;
-            glDrawArrays(GL_TRIANGLES, 0, 12);
-        }
+        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+        model = glm::rotate(model, glm::radians(20.0f), glm::vec3(1.0f, 1.0f, 0.0f));
+
+        view = glm::translate(view, glm::vec3(0.0f, -1.0f, -6.0f));
+        
+        projection = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.f);
+
+        shaderProgram.setMat4Uniform("model", model);
+        shaderProgram.setMat4Uniform("view", view);
+        shaderProgram.setMat4Uniform("projection", projection);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
         glfwSwapBuffers(window);
        
@@ -158,7 +197,7 @@ int main(void) {
     }
     
     VAO.destroy();
-    triangleVBO.destroy();
+    cubeVBO.destroy();
     colorVBO.destroy();
     shaderProgram.destroy();
 
