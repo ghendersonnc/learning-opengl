@@ -51,55 +51,60 @@ int main(void) {
 
     float positions[] = {
         // Back face
-    -1.0f, -1.0f, -1.0f, 
-     1.0f,  1.0f, -1.0f, 
-     1.0f, -1.0f, -1.0f,         
-     1.0f,  1.0f, -1.0f, 
-    -1.0f, -1.0f, -1.0f, 
-    -1.0f,  1.0f, -1.0f, 
+    -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
+     1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
+     1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
+     1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
+    -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
+    -1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
     // Front face
-    -1.0f, -1.0f,  1.0f, 
-     1.0f, -1.0f,  1.0f, 
-     1.0f,  1.0f,  1.0f, 
-     1.0f,  1.0f,  1.0f, 
-    -1.0f,  1.0f,  1.0f, 
-    -1.0f, -1.0f,  1.0f, 
+    -1.0f, -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+     1.0f, -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+     1.0f,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+     1.0f,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+    -1.0f,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+    -1.0f, -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
     // Left face
-    -1.0f,  1.0f,  1.0f, 
-    -1.0f,  1.0f, -1.0f, 
-    -1.0f, -1.0f, -1.0f, 
-    -1.0f, -1.0f, -1.0f, 
-    -1.0f, -1.0f,  1.0f, 
-    -1.0f,  1.0f,  1.0f, 
+    -1.0f,  1.0f,  1.0f, -1.0f, 0.0f, 0.0f,
+    -1.0f,  1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
+    -1.0f, -1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
+    -1.0f, -1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
+    -1.0f, -1.0f,  1.0f, -1.0f, 0.0f, 0.0f,
+    -1.0f,  1.0f,  1.0f, -1.0f, 0.0f, 0.0f,
     // Right face
-     1.0f,  1.0f,  1.0f, 
-     1.0f, -1.0f, -1.0f, 
-     1.0f,  1.0f, -1.0f,      
-     1.0f, -1.0f, -1.0f, 
-     1.0f,  1.0f,  1.0f, 
-     1.0f, -1.0f,  1.0f,    
+     1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 0.0f,
+     1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f,
+     1.0f,  1.0f, -1.0f, 1.0f, 0.0f, 0.0f,
+     1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f,
+     1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 0.0f,
+     1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f,
     // Bottom face
-    -1.0f, -1.0f, -1.0f, 
-     1.0f, -1.0f, -1.0f, 
-     1.0f, -1.0f,  1.0f, 
-     1.0f, -1.0f,  1.0f, 
-    -1.0f, -1.0f,  1.0f, 
-    -1.0f, -1.0f, -1.0f, 
+    -1.0f, -1.0f, -1.0f, 0.0f, -1.0f, 0.0f,
+     1.0f, -1.0f, -1.0f, 0.0f, -1.0f, 0.0f,
+     1.0f, -1.0f,  1.0f, 0.0f, -1.0f, 0.0f,
+     1.0f, -1.0f,  1.0f, 0.0f, -1.0f, 0.0f,
+    -1.0f, -1.0f,  1.0f, 0.0f, -1.0f, 0.0f,
+    -1.0f, -1.0f, -1.0f, 0.0f, -1.0f, 0.0f,
     // Top face
-    -1.0f,  1.0f, -1.0f, 
-     1.0f,  1.0f,  1.0f, 
-     1.0f,  1.0f, -1.0f,  
-     1.0f,  1.0f,  1.0f, 
-    -1.0f,  1.0f, -1.0f, 
-    -1.0f,  1.0f,  1.0f
+    -1.0f,  1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+     1.0f,  1.0f,  1.0f, 0.0f, 1.0f, 0.0f,
+     1.0f,  1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+     1.0f,  1.0f,  1.0f, 0.0f, 1.0f, 0.0f,
+    -1.0f,  1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+    -1.0f,  1.0f,  1.0f, 0.0f, 1.0f, 0.0f
     };
 
-    VBO cubeVBO(GL_ARRAY_BUFFER, positions, 108 * sizeof(float), GL_STATIC_DRAW);
-    VAO VAO;
+    VBO cubeVBO(GL_ARRAY_BUFFER, positions, 216 * sizeof(float), GL_STATIC_DRAW);
+    VAO cubeVAO;
+    cubeVAO.linkVBO(cubeVBO, 0, 3, 6, 0);
+    cubeVAO.linkVBO(cubeVBO, 2, 3, 6, 3);
+    cubeVAO.unbind();
     
-    VAO.linkVBO(cubeVBO, 0, 3);
+    VAO lightVAO;
+    lightVAO.linkVBO(cubeVBO, 0, 3, 6, 0);
     cubeVBO.unbind();
-    VAO.unbind();
+    lightVAO.unbind();
+
     float colors[] = {
         // RGBA
         1.0f, 0.0f, 0.0f, 1.0f,
@@ -148,13 +153,15 @@ int main(void) {
     VBO colorVBO(GL_ARRAY_BUFFER, colors, 156 * sizeof(float), GL_STATIC_DRAW);
 
     // Link colorVBO
-    VAO.bind();
-    VAO.linkVBO(colorVBO, 1, 4);
+    cubeVAO.bind();
+    cubeVAO.linkVBO(colorVBO, 1, 4, 4, 0);
     colorVBO.unbind();
-    VAO.unbind();
+    cubeVAO.unbind();
 
-    Shader shaderProgram("resources/shaders/vertexShader.vert", "resources/shaders/fragmentShader.frag");
-    shaderProgram.use();
+    Shader cubeShader("resources/shaders/cubeShader.vert", "resources/shaders/cubeShader.frag");
+    Shader lightShader("resources/shaders/lightShader.vert", "resources/shaders/lightShader.frag");
+    cubeShader.use();
+    lightShader.use();
     
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -162,29 +169,56 @@ int main(void) {
     
     // Continuously run until window is closed
     double lastTime = glfwGetTime();
-
+    glm::vec4 lightPos = glm::vec4(1.5f, 1.0f, 0.0f, 1.5f);
     while (!glfwWindowShouldClose(window)) {
         // color
         //glClearColor(0.20f, 0.91f, 0.91f, 1.0f);
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        VAO.bind();
         
-        glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 view = glm::mat4(1.0f);
-        glm::mat4 projection = glm::mat4(1.0f);
+        {
+            cubeShader.use();
+            cubeShader.setVec4("lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+            cubeShader.setVec4("lightPos", lightPos);
+            glm::mat4 model = glm::mat4(1.0f);
+            glm::mat4 view = glm::mat4(1.0f);
+            glm::mat4 projection = glm::mat4(1.0f);
 
-        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
-        model = glm::rotate(model, glm::radians(20.0f), glm::vec3(1.0f, 1.0f, 0.0f));
+            model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+            model = glm::rotate(model, glm::radians(20.0f), glm::vec3(1.0f, 1.0f, 0.0f));
 
-        view = glm::translate(view, glm::vec3(0.0f, -1.0f, -6.0f));
+            view = glm::translate(view, glm::vec3(0.0f, -1.0f, -6.0f));
         
-        projection = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.f);
+            projection = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.f);
 
-        shaderProgram.setMat4Uniform("model", model);
-        shaderProgram.setMat4Uniform("view", view);
-        shaderProgram.setMat4Uniform("projection", projection);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+            cubeShader.setMat4("model", model);
+            cubeShader.setMat4("view", view);
+            cubeShader.setMat4("projection", projection);
+            cubeVAO.bind();
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+            cubeVAO.unbind();
+        }
+
+        {
+            lightShader.use();
+
+            glm::mat4 model = glm::mat4(1.0f);
+            glm::mat4 view = glm::mat4(1.0f);
+            glm::mat4 projection = glm::mat4(1.0f);
+
+            model = glm::translate(model, glm::vec3(lightPos));
+            model = glm::scale(model, glm::vec3(0.2f));
+            model = glm::rotate(model, glm::radians(20.0f), glm::vec3(1.0f, 1.0f, 0.0f));
+
+            view = glm::translate(view, glm::vec3(0.0f, -1.0f, -6.0f));
+
+            projection = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.f);
+            lightShader.setMat4("model", model);
+            lightShader.setMat4("view", view);
+            lightShader.setMat4("projection", projection);
+            lightVAO.bind();
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
 
         glfwSwapBuffers(window);
        
@@ -196,10 +230,10 @@ int main(void) {
 
     }
     
-    VAO.destroy();
+    cubeVAO.destroy();
     cubeVBO.destroy();
     colorVBO.destroy();
-    shaderProgram.destroy();
+    cubeShader.destroy();
 
     glfwTerminate();
     return 0;

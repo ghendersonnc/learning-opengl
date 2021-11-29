@@ -76,7 +76,11 @@ void Shader::use() {
     glUseProgram(this->ID);
 }
 
-void Shader::setMat4Uniform(const char* uniformName, glm::mat4 matrix) {
+void Shader::setVec4(const char* uniformName, const glm::vec4 &vector) {
+    glUniform4fv(glGetUniformLocation(this->ID, uniformName), 1, glm::value_ptr(vector));
+}
+
+void Shader::setMat4(const char* uniformName, glm::mat4 &matrix) {
     glUniformMatrix4fv(glGetUniformLocation(this->ID, uniformName), 1, GL_FALSE, glm::value_ptr(matrix));
 }
 

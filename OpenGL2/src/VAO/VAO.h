@@ -15,7 +15,7 @@ private:
 public:
 	VAO();
 	void bind();
-	void linkVBO(VBO& vbo, const unsigned int index, int size);
+	void linkVBO(VBO& vbo, const unsigned int index, const int size, const int stride, const int offset);
 	void unbind();
 	void destroy();
 };

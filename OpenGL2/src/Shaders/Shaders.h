@@ -24,7 +24,8 @@ public:
 	unsigned int ID;
 	Shader(const std::string vertexShaderPath, const std::string fragmentShaderPath);
 	void use();
-	void setMat4Uniform(const char* uniformName, glm::mat4 matrix);
+	void setVec4(const char* uniformName, const glm::vec4 &vector);
+	void setMat4(const char* uniformName, glm::mat4 &matrix);
 	void destroy();
 
 };

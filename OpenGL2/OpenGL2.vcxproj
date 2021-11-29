@@ -153,8 +153,10 @@
     <ClCompile Include="src\VBO\VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\shaders\fragmentShader.frag" />
-    <None Include="resources\shaders\vertexShader.vert" />
+    <None Include="resources\shaders\cubeShader.frag" />
+    <None Include="resources\shaders\lightShader.frag" />
+    <None Include="resources\shaders\lightShader.vert" />
+    <None Include="resources\shaders\cubeShader.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Shaders\Shaders.h" />
