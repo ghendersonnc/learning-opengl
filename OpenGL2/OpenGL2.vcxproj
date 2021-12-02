@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Camera\Camera.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Shaders\Shaders.cpp" />
     <ClCompile Include="src\VAO\VAO.cpp" />
@@ -159,6 +160,7 @@
     <None Include="resources\shaders\cubeShader.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Camera\Camera.h" />
     <ClInclude Include="src\Shaders\Shaders.h" />
     <ClInclude Include="src\VAO\VAO.h" />
     <ClInclude Include="src\VBO\VBO.h" />
