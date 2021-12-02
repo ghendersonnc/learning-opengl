@@ -169,43 +169,39 @@ int main(void) {
     
     // Continuously run until window is closed
     double lastTime = glfwGetTime();
-    glm::vec4 lightPos = glm::vec4(1.5f, 1.0f, 0.0f, 1.5f);
+    glm::vec4 lightPos = glm::vec4(-1.5f, 1.0f, 0.0f, 1.5f);
     glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
-
     glm::vec3 cameraPosition = glm::vec3(0.0f, 0.0f, 3.0f);
     glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 cameraDirection = glm::normalize(cameraPosition - cameraTarget);
-
-    glm::vec3 up = glm::vec3(0.0f, 100.0f, 0.0f);
+    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
     glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
-
     glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
-
-
-
-
+    float radius = 10.0f;
+    float camX;
+    float camZ;
 
     while (!glfwWindowShouldClose(window)) {
         // color
         //glClearColor(0.20f, 0.91f, 0.91f, 1.0f);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        float radius = 10.0f;
-        float camX = sin(glfwGetTime()) * radius;
-        float camZ = cos(glfwGetTime()) * radius;
+        camX = sin(glfwGetTime()) * radius;
+        camZ = cos(glfwGetTime()) * radius;
         
         {
             cubeShader.use();
+            cubeShader.setVec3("lightColor", lightColor);
+            cubeShader.setVec4("lightPos", lightPos);
             glm::mat4 model = glm::mat4(1.0f);
             glm::mat4 view = glm::mat4(1.0f);
             glm::mat4 projection = glm::mat4(1.0f);
 
             model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
             model = glm::rotate(model, glm::radians(20.0f), glm::vec3(1.0f, 1.0f, 0.0f));
-            cubeShader.setVec3("lightColor", lightColor);
-            cubeShader.setVec4("lightPos", lightPos);
 
-            view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            lightPos = glm::vec4(sin(glfwGetTime()) * 1.5, cos(glfwGetTime()) * 1.5, 0.0f, 1.5f);
+            view = glm::lookAt(glm::vec3(camX, 3.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
             projection = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.f);
 
@@ -229,7 +225,7 @@ int main(void) {
             model = glm::rotate(model, glm::radians(20.0f), glm::vec3(1.0f, 1.0f, 0.0f));
 
             
-            view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            view = glm::lookAt(glm::vec3(camX, 3.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
             projection = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.f);
             lightShader.setMat4("model", model);
