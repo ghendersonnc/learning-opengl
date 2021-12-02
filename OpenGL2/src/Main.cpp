@@ -170,6 +170,7 @@ int main(void) {
     // Continuously run until window is closed
     double lastTime = glfwGetTime();
     glm::vec4 lightPos = glm::vec4(1.5f, 1.0f, 0.0f, 1.5f);
+    glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
     while (!glfwWindowShouldClose(window)) {
         // color
         //glClearColor(0.20f, 0.91f, 0.91f, 1.0f);
@@ -178,7 +179,7 @@ int main(void) {
         
         {
             cubeShader.use();
-            cubeShader.setVec4("lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+            cubeShader.setVec3("lightColor", lightColor);
             cubeShader.setVec4("lightPos", lightPos);
             glm::mat4 model = glm::mat4(1.0f);
             glm::mat4 view = glm::mat4(1.0f);
