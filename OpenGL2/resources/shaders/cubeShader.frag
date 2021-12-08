@@ -21,4 +21,4 @@ void main() {
 	color = (ambient + diffuse) * vertexColors;
 
 	
-}	
+}
