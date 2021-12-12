@@ -5,3 +5,5 @@ I have been learning OpenGL for almost a year now. But now but I am taking a dif
 [GLFW](https://github.com/glfw/glfw)
 
 [glm](https://github.com/g-truc/glm)
+
+[GLEW](https://github.com/nigels-com/glew)
