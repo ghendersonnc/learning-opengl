@@ -13,6 +13,7 @@
 #include "Shaders.h"
 #include "VBO.h"
 #include "VAO.h"
+#include "Camera.h"
 
 // Some defs
 #define WINDOW_WIDTH 800
@@ -172,9 +173,7 @@ int main(void) {
     glm::vec4 lightPos = glm::vec4(-1.0f, 1.0f, 0.0f, 1.5f);
     glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
-    glm::vec3 cameraPosition = glm::vec3(0.0f, 0.0f, 10.0f);
-    glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-    glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+    Camera camera(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f);
     bool r = true;
     while (!glfwWindowShouldClose(window)) {
         // color
@@ -191,19 +190,17 @@ int main(void) {
         * 
         */
 
-
-
         if (r) {
-            cameraPosition += 0.05f * glm::normalize(glm::cross(cameraFront, cameraUp));
+            camera.position += 0.05f * glm::normalize(glm::cross(camera.front, camera.up));
             lightPos += glm::vec4(0.05, 0.0f, 0.0f, 0.0f);
-            if (cameraPosition.r >= 2)
+            if (camera.position.r >= 2)
                 r = false;
 
         }
         else {
-            cameraPosition -= 0.05f * glm::normalize(glm::cross(cameraFront, cameraUp));
+            camera.position -= 0.05f * glm::normalize(glm::cross(camera.front, camera.up));
             lightPos -= glm::vec4(0.05, 0.0f, 0.0f, 0.0f);
-            if (cameraPosition.r <= -2)
+            if (camera.position.r <= -2)
                 r = true;
         }
 
@@ -218,7 +215,7 @@ int main(void) {
             model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
             model = glm::rotate(model, glm::radians(20.0f), glm::vec3(1.0f, 1.0f, 0.0f));
 
-            view = glm::lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
+            view = glm::lookAt(camera.position, camera.position + camera.front, camera.up);
 
             projection = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.f);
 
@@ -242,7 +239,7 @@ int main(void) {
             model = glm::rotate(model, glm::radians(20.0f), glm::vec3(1.0f, 1.0f, 0.0f));
 
             
-            view = glm::lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
+            view = glm::lookAt(camera.position, camera.position + camera.front, camera.up);
 
             projection = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.f);
             lightShader.setMat4("model", model);
