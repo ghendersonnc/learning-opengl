@@ -10,9 +10,9 @@
 #include "glm/gtc/type_ptr.hpp"
 
 // Self made headers 
-#include "Shaders/Shaders.h"
-#include "VBO/VBO.h"
-#include "VAO/VAO.h"
+#include "Shaders.h"
+#include "VBO.h"
+#include "VAO.h"
 
 // Some defs
 #define WINDOW_WIDTH 800
