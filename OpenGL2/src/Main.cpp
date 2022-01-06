@@ -3,11 +3,12 @@
 #include <Windows.h>
 
 // Dependencies
-#include "GL/glew.h"
-#include "GLFW/glfw3.h"
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtc/type_ptr.hpp"
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include "stb_image.h"
 
 // Self made headers 
 #include "Shaders.h"
@@ -272,24 +273,8 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) exit(0);
     if (key == GLFW_KEY_A && action == GLFW_PRESS) {
 
-        /*
-        This block took a bit of trial and error to figure out as the docs do not talk
-        much about GL_POLYGON_MODE being used with glGet*.
-
-        After searching it seems I had to have passed in a buffer of 2 integers.
-        This is why I am using dynamic memory allocation
-        */
-
-        int* polyMode = (int*)malloc(2 * sizeof(int));
+        int polyMode[2];
         glGetIntegerv(GL_POLYGON_MODE, polyMode);
-
-        if (polyMode) {
-            if (*polyMode == GL_FILL) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            else glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            free(polyMode);
-        }
-        else {
-            free(polyMode);
-        }
+        glPolygonMode(GL_FRONT_AND_BACK, (*polyMode == GL_FILL) * GL_LINE + (*polyMode == GL_LINE) * GL_FILL);
     }
 }

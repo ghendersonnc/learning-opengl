@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\cubeShader.frag" />
@@ -158,6 +159,7 @@
   <ItemGroup>
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Shaders.h" />
+    <ClInclude Include="src\stb_image.h" />
     <ClInclude Include="src\VAO.h" />
     <ClInclude Include="src\VBO.h" />
   </ItemGroup>
